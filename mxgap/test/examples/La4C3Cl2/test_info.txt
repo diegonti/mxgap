@@ -1,0 +1,16 @@
+name     La4C3Cl2 
+n        3     
+M        La    
+X        C     
+T        Cl    
+stack    ABA   
+hollow   HMX   
+a        3.781055062861008 
+d        13.472868886064285 
+nT       1     
+rT       0     
+Ef       -1.226 
+Eg         0.0 
+ispin        2 
+ML_isgap     0 
+ML_gap   0.000 

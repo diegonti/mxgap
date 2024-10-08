@@ -1,0 +1,11 @@
+Classifiers	     Regressors (full)    Regressors (only gap) Regressors (edges)
+GBC                  GBR                  GBR_onlygap          	GBR_edges           
+RFC                  RFR                  RFR_onlygap          	RFR_edges           
+SVC                  SVR                  SVR_onlygap          	SVR_edges           
+MLPC                 MLPR                 MLPR_onlygap         	MLPR_edges          
+LR                   KRR                  KRR_onlygap          	KRR_edges            
+GBC_notDOS           GBR_notDOS           GBR_onlygap_notDOS   	GBR_edges_notDOS    
+RFC_notDOS           RFR_notDOS           RFR_onlygap_notDOS   	RFR_edges_notDOS    
+SVC_notDOS           SVR_notDOS           SVR_onlygap_notDOS   	SVR_edges_notDOS    
+MLPC_notDOS          MLPR_notDOS          MLPR_onlygap_notDOS  	MLPR_edges_notDOS   
+LR_notDOS            KRR_notDOS           KRR_onlygap_notDOS   	KRR_edges_notDOS    

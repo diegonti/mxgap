@@ -1,0 +1,16 @@
+name     La2C1N2H2 
+n        1     
+M        La    
+X        C     
+T        N     
+stack    ABC   
+hollow   HM    
+a        3.9053267888829666 
+d        7.42856740844365 
+nT       2     
+rT       0     
+Ef       -1.508 
+Eg         0.0 
+ispin        2 
+ML_isgap     1 
+ML_gap   0.862 

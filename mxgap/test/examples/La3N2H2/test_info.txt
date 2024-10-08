@@ -1,0 +1,16 @@
+name     La3N2H2 
+n        2     
+M        La    
+X        N     
+T        H     
+stack    ABA   
+hollow   H     
+a        3.6784732972675567 
+d        8.63923485436009 
+nT       1     
+rT       0     
+Ef       -0.276 
+Eg         0.0 
+ispin        2 
+ML_isgap     1 
+ML_gap   0.805 

@@ -1,0 +1,16 @@
+name     La3C2O2H2 
+n        2     
+M        La    
+X        C     
+T        O     
+stack    ABA   
+hollow   HMX   
+a        3.7300739989129963 
+d        11.255371243336512 
+nT       2     
+rT       0     
+Ef       0.578 
+Eg         0.0 
+ispin        2 
+ML_isgap     1 
+ML_gap   0.485 

@@ -1,0 +1,16 @@
+name     La4N3I2 
+n        3     
+M        La    
+X        N     
+T        I     
+stack    ABC   
+hollow   HX    
+a        3.8378576067362324 
+d        13.609927046163524 
+nT       1     
+rT       0     
+Ef       0.132 
+Eg         0.0 
+ispin        2 
+ML_isgap     1 
+ML_gap   0.758 

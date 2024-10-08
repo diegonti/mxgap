@@ -1,0 +1,16 @@
+name     La2C1Te2 
+n        1     
+M        La    
+X        C     
+T        Te    
+stack    ABA   
+hollow   HX    
+a        4.3914553981671665 
+d        6.399049747247199 
+nT       1     
+rT       0     
+Ef       -2.699 
+Eg       0.935 
+ispin        2 
+ML_isgap     1 
+ML_gap   2.441 
