@@ -77,6 +77,7 @@ def add_path_ending(path):
     elif path[-1] == "\\": pass
     elif "/" in path: path = path + "/"
     elif "\\" in path: path = path + "\\"
+    elif path == ".": path = "./"
 
     return path
 
