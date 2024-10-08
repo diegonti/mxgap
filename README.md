@@ -1,8 +1,8 @@
 # MXgap: A Machine Learning Program to predict MXene Bandgaps
 
 <!-- Logo -->
-<!-- [![PyPi](https://img.shields.io/pypi/v/mxgap)](https://pypi.org/project/mxgap/)
-[![Tests Status](https://github.com/diegonti/mxgap/actions/workflows/python_tests.yaml/badge.svg)](https://github.com/diegonti/mxgap/actions?query=workflow%3ATests) -->
+<!-- [![PyPi](https://img.shields.io/pypi/v/mxgap)](https://pypi.org/project/mxgap/) -->
+[![Tests](https://github.com/diegonti/mxgap/actions/workflows/python_tests.yaml/badge.svg)](https://github.com/diegonti/mxgap/actions/workflows/python_tests.yaml)
 
 
 MXgap is a Machine Learning tool for quickly predicting the bandgap of MXene compounds with little to no effort.
