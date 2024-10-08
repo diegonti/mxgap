@@ -87,7 +87,7 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap"):
         return [pred]
 
     else:
-        raise ValueError(f"Model {model} not available. Use main.py -l tu get the full list of models.")
+        raise ValueError(f"Model {model} not available. Use {PACKAGE_NAME} -l tu get the full list of models.")
     
 
 def run_prediction(path:str=None, model:str=None, files:list=None):

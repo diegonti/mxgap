@@ -9,6 +9,8 @@ from datetime import datetime
 
 import numpy as np
 
+from mxgap import PACKAGE_NAME
+
 ########################################################################
 ############################ ML Models list ############################
 ########################################################################
@@ -155,7 +157,7 @@ def model_type(model:str):
     elif any(reg in model for reg in regressors):
         return "R"
     else:
-        raise ValueError(f"Model {model} not available. Use main.py -l tu get the full list of models.")
+        raise ValueError(f"Model {model} not available. Use {PACKAGE_NAME} -l tu get the full list of models.")
     
 
 def reorder_model_list(model_list,m_type):

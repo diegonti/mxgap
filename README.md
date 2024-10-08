@@ -64,7 +64,7 @@ pip install .
 The program is mainly used through the CLI:
 
 ```
-main.py [-h] [-f CONTCAR [DOSCAR]] [-m MODEL] [PATH]
+mxgap [-h] [-f CONTCAR [DOSCAR]] [-m MODEL] [PATH]
 ```
 With the arguments and options explained below:
 ```
@@ -81,7 +81,7 @@ options:
 ```
 So, for a quick example, the below command will look for the CONTCAR and DOSCAR files in the specified folder and use the default (best) ML model to predict the bandgap.
 ```
-main.py examples/La2C1Cl2/
+mxgap examples/La2C1Cl2/
 ```
 
 Also, the program can be imported as a python module. See the [Jupyter Notebook](tutorials.ipynb) for some tutorials. Here is a quick example:
@@ -110,7 +110,7 @@ pytest
 To get information about the program and its use, run the command:
 
 ```
-python mxgap.py -h
+mxgap -h
 ```
 
 For any more doubts or questions, feel free to contact [me](mailto:diegonti.doc@gmail.com).
