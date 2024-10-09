@@ -1,9 +1,20 @@
+
+====================================================================
+                            MXgap Report                           
+====================================================================
+
+Date:            2024-10-09 16:41:15
+Model Used:      GBC+RFR_onlygap
+Folder Path:     ../mxgap/test/examples/La4C3Cl2
+CONTCAR file:    ../mxgap/test/examples/La4C3Cl2/CONTCAR
+DOSCAR file:     ../mxgap/test/examples/La4C3Cl2/DOSCAR
+
+====================================================================
+    
 Predicted ML_isgap  =  0 (Metallic)
 Predicted ML_gap    =  0.000
-Predicted ML_isgap  =  0 (Metallic)
-Predicted ML_gap    =  0.000
-Predicted ML_isgap  =  0 (Metallic)
-Predicted ML_gap    =  0.000
+
+Finished successfully in 0.70s
 Predicted ML_isgap  =  0 (Metallic)
 Predicted ML_gap    =  0.000
 Predicted ML_isgap  =  0 (Metallic)
