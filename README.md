@@ -1,7 +1,7 @@
 # MXgap: A Machine Learning Program to predict MXene Bandgaps
 
 <!-- Logo -->
-<!-- [![PyPi](https://img.shields.io/pypi/v/mxgap)](https://pypi.org/project/mxgap/) -->
+[![PyPi](https://img.shields.io/pypi/v/mxgap)](https://pypi.org/project/mxgap/)
 [![Tests](https://github.com/diegonti/mxgap/actions/workflows/python_tests.yaml/badge.svg)](https://github.com/diegonti/mxgap/actions/workflows/python_tests.yaml)
 
 
