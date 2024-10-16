@@ -90,7 +90,7 @@ mxgap examples/La2C1Cl2/
 Also, the program can be imported as a python module. See the [Jupyter Notebook](tutorials/tutorials.ipynb) for some tutorials. Here is a quick example:
 
 ```python
-from mxgap.ML import run_prediction
+from mxgap import run_prediction
 
 path         = "examples/La2C1Cl2/"
 model        = "GBC+RFR"
