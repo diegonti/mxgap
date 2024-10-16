@@ -30,7 +30,7 @@
 
 <br>
 
-This program is based on the data gathered in our works: [*J. Mater. Chem. A*, 2023, 11, 13754-13764](https://doi.org/10.1039/D3TA01933K) and [*Energy Environ. Mater.*, 2024, 0, e12774](https://doi.org/10.1002/eem2.12774). 
+This program is based on the data gathered in our works: [*J. Mater. Chem. A*, 2023, 11, 13754-13764](https://doi.org/10.1039/D3TA01933K) and [*Energy Environ. Mater.*, 2024, 7, e12774](https://doi.org/10.1002/eem2.12774). 
 
 <!-- And the ML program and results have been published in [paper4](paper4). If use this, please cite:
 ```
@@ -90,12 +90,11 @@ mxgap examples/La2C1Cl2/
 Also, the program can be imported as a python module. See the [Jupyter Notebook](tutorials.ipynb) for some tutorials. Here is a quick example:
 
 ```python
-from mxgap.ML import ML_prediction
+from mxgap.ML import run_prediction
 
-contcar_path = "examples/La2C1Cl2/CONTCAR"
-doscar_path  = "examples/La2C1Cl2/DOSCAR"
+path         = "examples/La2C1Cl2/"
 model        = "GBC+RFR"
-prediction   =  ML_prediction(contcar_path, doscar_path, model)
+prediction   =  run_prediction(path, model = model)
 ```
 
 
