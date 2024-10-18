@@ -28,7 +28,7 @@ def parse_user_input():
                             description="Predict the PBE0 bandgap of terminated MXenes with trained ML models. \
                             For use, input the path of the folder of the calculation (with optimized CONTCAR and PBE DOSCAR present). \
                             The DOSCAR will be analyzed within a ±5 eV range from the Fermi level; it is recommended to select a sufficiently fine NEDOS for accurate results.\
-                            This program is based on our works: J. Mater. Chem. A, 2023,11, 13754-13764; Energy Environ. Mater, 2024, 0, e12774")
+                            This program is based on our works: J. Mater. Chem. A, 2023,11, 13754-13764; Energy Environ. Mater, 2024, 7, e12774")
     parser.add_argument("path",type=str,nargs="?",default=None,help="Specify the path to the directory containing the calculation output files, if empty, will select the current directory. Must contain at least the optimized CONTCAR, and the PBE DOSCAR for the PBE trained models.")
     parser.add_argument("-f","--files",type=str,nargs="+",required=False,help="Specify in order the direct CONTCAR and DOSCAR (if needed) paths manually. The path positional argument has preference over this.")
     parser.add_argument("-m","--model",type=str,default=None,help="Choose the trained MXene-Learning model to use. By default, the most accurate version is selected (RFR).")
