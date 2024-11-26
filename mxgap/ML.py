@@ -13,6 +13,7 @@ TO DO:
 
 import os
 from time import time
+import numpy as np
 
 from mxgap.features import make_data_array
 from mxgap.utils import load_normalization, load_models_list, load_pickle, model_needsDOS, rescale, \
@@ -34,12 +35,15 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",o
     """
     Main function for predicting bandgap with ML model, from CONTCAR and DOSCAR paths.
 
-    `contcar_path` : Path for the CONTCAR file.
-    `doscar_path` : Path for the DOSCAR file.
-    `model` : ML model to use. Defaults to GBC+RFR_onlygap (best).
+    Parameters
+    -----------
+
+    `contcar_path`  : Path for the CONTCAR file.
+    `doscar_path`   : Path for the DOSCAR file.
+    `model`         : ML model to use. Defaults to GBC+RFR_onlygap (best).
+    `output`        : Path to save the output. Defaults to "mxgap.info" in the same directory as CONTCAR.
     """
 
-    #! TODO: Implement _edge models and results
     if output is None:
         base_path = os.path.dirname(contcar_path)
         output = os.path.join(base_path,"mxgap.info")
@@ -49,6 +53,7 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",o
     data_array_dict = {True: make_data_array(contcar_path,doscar_path, True, norm_x_contcar,norm_x_doscar),
                         False: make_data_array(contcar_path,doscar_path, False, norm_x_contcar,norm_x_doscar)}
 
+    # Parse models and determine types
     model_list = [m.strip() for m in model.split("+")]
     m_type = [model_type(m) for m in model_list]
 
@@ -62,7 +67,15 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",o
 
         if clf_pred == 1:
             reg_pred = model_prediction(reg_str, data_array_dict[model_needsDOS(reg_str)])
-            reg_pred_rescaled = rescale(reg_pred,norm_y,0)      #! Adapt for _edges
+            if "_edges" in model_list[1]:
+                reg_pred_rescaled = rescale(reg_pred,norm_y,1)     
+                ML_VBM,ML_CBM,ML_gap = round(reg_pred_rescaled[0],3),round(reg_pred_rescaled[1],3),round(reg_pred_rescaled[1]-reg_pred_rescaled[0],3)
+                print_reg(output,ML_VBM,"VBM")
+                print_reg(output,ML_CBM,"CBM")
+                print_reg(output,ML_gap,"gap")
+                return [clf_pred, ML_VBM, ML_CBM, ML_gap] # Four outputs
+            else:
+                reg_pred_rescaled = rescale(reg_pred,norm_y,0)                                                              #! Adapt for _edges
         else: 
             reg_pred_rescaled = 0
 
@@ -71,20 +84,27 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",o
         print_clf(output,ML_isgap)
         print_reg(output,ML_gap)
 
-        return [ML_isgap, ML_gap]
+        return [ML_isgap, ML_gap]   # Two outputs
 
     elif len(model_list) == 1:      #### C or R only case
 
         pred = model_prediction(model_list[0], data_array_dict[model_needsDOS(model_list[0])])
-
+        
         if m_type[0] == "R":
-            pred = round(rescale(pred,norm_y,0), 3)             #! Adapt for _edges
-            print_reg(output,pred)
+            if "_edges" in model_list[0]:
+                pred = rescale(pred,norm_y,1)
+                ML_VBM,ML_CBM,ML_gap = round(pred[0],3),round(pred[1],3),round(pred[1]-pred[0],3)
+                print_reg(output,ML_VBM,"VBM")
+                print_reg(output,ML_CBM,"CBM")
+                print_reg(output,ML_gap,"gap")
+                return [ML_VBM,ML_CBM,ML_gap] # Three outputs
+            else:
+                pred = round(rescale(pred,norm_y,0),3)                                                                       #! Adapt for _edges
+                print_reg(output,pred)
         elif m_type[0] == "C":
             print_clf(output,pred)
-            pass
         
-        return [pred]
+        return [pred]   # One output
 
     else:
         raise ValueError(f"Model {model} not available. Use {PACKAGE_NAME} -l tu get the full list of models.")
