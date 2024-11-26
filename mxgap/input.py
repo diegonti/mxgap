@@ -61,7 +61,7 @@ def model_exists(model:str,models_list):
         assert m in models_list, f"The provided model {model} does not exist. Use {PACKAGE_NAME} -l to get the full list."
 
 
-def validate_user_input(path,model,files,output,default_path="./", default_model="GBC+RFR_onlygap",default_output="mxgap.info"):
+def validate_user_input(path,model,files,output=None,default_path="./", default_model="GBC+RFR_onlygap",default_output="mxgap.info"):
     """Validates the input given by the user. Checks input incompatibility, errors, etc.
     If valid, returns the CONTCAR, DOSCAR, and output paths."""
 
