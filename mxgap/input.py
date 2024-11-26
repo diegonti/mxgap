@@ -32,6 +32,7 @@ def parse_user_input():
     parser.add_argument("path",type=str,nargs="?",default=None,help="Specify the path to the directory containing the calculation output files, if empty, will select the current directory. Must contain at least the optimized CONTCAR, and the PBE DOSCAR for the PBE trained models.")
     parser.add_argument("-f","--files",type=str,nargs="+",required=False,help="Specify in order the direct CONTCAR and DOSCAR (if needed) paths manually. The path positional argument has preference over this.")
     parser.add_argument("-m","--model",type=str,default=None,help="Choose the trained MXene-Learning model to use. By default, the most accurate version is selected (RFR).")
+    parser.add_argument("-o","--output",type=str,default=None,help="Path of the output file. By default it will generate a mxgap.info in the CONTCAR folder.")
     parser.add_argument("-l","--list", action="store_true",help="List of all trained ML models available to choose.")
     args = parser.parse_args()
 
@@ -39,7 +40,7 @@ def parse_user_input():
         print(models_list_string)
         sys.exit(0) 
 
-    return args.path, args.model, args.files
+    return args.path, args.model, args.files, args.output
 
 
 ########################################################################
@@ -47,7 +48,7 @@ def parse_user_input():
 ########################################################################
 
 def input_path_exists(*paths):
-    """Asserts that the paths given bythe suer exist."""
+    """Asserts that the paths given by the user exist."""
     for path in paths:
         if path is None: continue
         assert os.path.exists(path), f"The provided path {path} does not exist."
@@ -60,9 +61,15 @@ def model_exists(model:str,models_list):
         assert m in models_list, f"The provided model {model} does not exist. Use {PACKAGE_NAME} -l to get the full list."
 
 
-def validate_user_input(path,model,files,default_path="./", default_model="GBC+RFR_onlygap"):
+def validate_user_input(path,model,files,output,default_path="./", default_model="GBC+RFR_onlygap",default_output="mxgap.info"):
     """Validates the input given by the user. Checks input incompatibility, errors, etc.
-    If valid, returns the CONTCAR and DOSCAR paths."""
+    If valid, returns the CONTCAR, DOSCAR, and output paths."""
+
+    if output is None:
+        output = default_output
+    else:
+        if os.path.dirname(output) == "": output = "./" + output
+        input_path_exists(os.path.dirname(output))
 
     if model is None:
         print(f"No ML model detected. The {default_model} model (most accurate) will be used.")
@@ -99,7 +106,7 @@ def validate_user_input(path,model,files,default_path="./", default_model="GBC+R
         else: 
             raise ValueError("File paths not detected properly. Indicate the CONTCAR and DOSCAR (if needed) paths.")
 
-    return contcar_path, doscar_path, model
+    return contcar_path, doscar_path, model, output
 
 
 def validate_user_files():

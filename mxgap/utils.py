@@ -41,7 +41,7 @@ def print_reg(file,pred):
     print2(file,text)
 
 
-def print_header(file,path,model,contcar_path,doscar_path):
+def print_header(file,path,model,contcar_path,doscar_path,output):
     current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     report = f"""
 ====================================================================
@@ -53,6 +53,7 @@ Model Used:      {model}
 Folder Path:     {path}
 CONTCAR file:    {contcar_path}
 DOSCAR file:     {doscar_path}
+Output Path:     {output}
 
 ====================================================================
     """
@@ -78,6 +79,7 @@ def add_path_ending(path):
     elif "/" in path: path = path + "/"
     elif "\\" in path: path = path + "\\"
     elif path == ".": path = "./"
+    else: path = path + "/"
 
     return path
 

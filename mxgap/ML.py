@@ -30,7 +30,7 @@ def model_prediction(model_str,data_array):
     return model_pred
 
 
-def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap"):
+def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",output=None):
     """
     Main function for predicting bandgap with ML model, from CONTCAR and DOSCAR paths.
 
@@ -40,9 +40,9 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap"):
     """
 
     #! TODO: Implement _edge models and results
-
-    base_path = os.path.dirname(contcar_path)
-    base_file = os.path.join(base_path,"mxgap.info")
+    if output is None:
+        base_path = os.path.dirname(contcar_path)
+        output = os.path.join(base_path,"mxgap.info")
 
     norm_x_contcar,norm_x_doscar, norm_y = load_normalization(norm_path)
 
@@ -68,10 +68,10 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap"):
 
         ML_isgap, ML_gap = clf_pred, round(reg_pred_rescaled,3)
 
-        print_clf(base_file,ML_isgap)
-        print_reg(base_file,ML_gap)
+        print_clf(output,ML_isgap)
+        print_reg(output,ML_gap)
 
-        return ML_isgap, ML_gap
+        return [ML_isgap, ML_gap]
 
     elif len(model_list) == 1:      #### C or R only case
 
@@ -79,9 +79,9 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap"):
 
         if m_type[0] == "R":
             pred = round(rescale(pred,norm_y,0), 3)             #! Adapt for _edges
-            print_reg(base_file,pred)
+            print_reg(output,pred)
         elif m_type[0] == "C":
-            print_clf(base_file,pred)
+            print_clf(output,pred)
             pass
         
         return [pred]
@@ -90,36 +90,40 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap"):
         raise ValueError(f"Model {model} not available. Use {PACKAGE_NAME} -l tu get the full list of models.")
     
 
-def run_prediction(path:str=None, model:str=None, files:list=None):
+def run_prediction(path:str=None, model:str=None, files:list=None, output:str=None):
     """Main function for predicting bandgap with ML model. Does the validation of inputs.
 
     Parameters
     ----------
-    `path`  : Optional. Path of the folder of a calculation, where the CONTCAR and DOSCAR are found. By default cwd.
-    `model` : Optional. ML model to use. By default GBC+RFR_onlygap (best).
-    `files` : Optional. Specify the paths for the CONTCAR and DOSCAR files, in a list. By default None. 
-            Use either `paths` or `files`, if both are specified, `path` will take preference.
+    `path`   : Optional. Path of the folder of a calculation, where the CONTCAR and DOSCAR are found. By default cwd.
+    `model`  : Optional. ML model to use. By default GBC+RFR_onlygap (best).
+    `files`  : Optional. Specify the paths for the CONTCAR and DOSCAR files, in a list. By default None. 
+               Use either `paths` or `files`, if both are specified, `path` will take preference.
+    `output` : Optional. Specify the output file. By default it will generate a mxgap.info in the CONTCAR folder. 
+
+    Returns
+    ---------
+    `pred` : Result of the prediction in a list. The length will vary depending on the used model. 
+             Can be either 1 (single Classifier or Regressor), 2 for combination of C+R, or +2 more for each when using the R_edges approach.
+
     """
     print()
     initial_time = time()
-    
-    contcar_path, doscar_path, model = validate_user_input(path, model, files, default_path, default_model)
 
-    input_path_exists(contcar_path,doscar_path)
+    contcar_path, doscar_path, model, output = validate_user_input(path, model, files, output, default_path, default_model, default_output)
+
+    input_path_exists(contcar_path, doscar_path)
     #! validate_files() (validate they are actual CONTCAR/DOSCAR files, maybe not necessary)
 
-    #! open file and write intro + results
+    # Open output file and write report (#! verbosity?)
     base_path = os.path.dirname(contcar_path)
-    base_file = os.path.join(base_path,f"{PACKAGE_NAME}.info")
-    print_header(base_file,path,model,contcar_path,doscar_path)
+    output = os.path.join(base_path,output).replace("\\","/") if output == default_output else output
+    print_header(output,path,model,contcar_path,doscar_path,output)
 
-
-    pred = ML_prediction(contcar_path,doscar_path,model)
+    pred = ML_prediction(contcar_path,doscar_path,model,output)
     
-    #! better output print/file
-
     final_time = time()
-    print2(base_file,f"\nFinished successfully in {final_time-initial_time:.2f}s")
+    print2(output,f"\nFinished successfully in {final_time-initial_time:.2f}s")
 
     return pred
 
@@ -127,6 +131,7 @@ def run_prediction(path:str=None, model:str=None, files:list=None):
 # Initialization of some paths
 default_path    =   "./"
 default_model   =   "GBC+RFR_onlygap"
+default_output  =   "mxgap.info"
 models_path     =   os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models', 'models/')
 norm_path       =   os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models', 'NORM_INFO.txt')
 model_list_path =   os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models', 'MODELS_LIST.txt')
