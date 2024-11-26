@@ -60,6 +60,17 @@ Output Path:     {output}
     print2(file,report,mode="w")
 
 
+def print_predictions(output, isgap=None, gap=None, vbm=None, cbm=None):
+    """Print predictions to the output file."""
+    if isgap is not None:
+        print_clf(output, isgap)
+    if vbm is not None:
+        print_reg(output, vbm, "VBM")
+    if cbm is not None:
+        print_reg(output, cbm, "CBM")
+    if gap is not None:
+        print_reg(output, gap, "gap")
+
 
 ########################################################################
 ########################## General Functions ###########################
@@ -115,7 +126,6 @@ def get_structure_indices(stack:str,hollow:str):
     return stack_i, hollow_i
 
 
-
 ########################################################################
 ######################### ML Models Uitilities #########################
 ########################################################################
@@ -169,7 +179,6 @@ def reorder_model_list(model_list,m_type):
     elif m_type == ["C","R"]: pass
     else: raise ValueError(f"Combination {'+'.join(model_list)} not available, use a C+R combination. Run main.py -l to get the full list of models.")
     return model_list
-
 
 
 def rescale(array,norm,case):
