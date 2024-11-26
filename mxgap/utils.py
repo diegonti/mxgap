@@ -36,8 +36,8 @@ def print_clf(file,pred):
     print2(file,text)
 
 
-def print_reg(file,pred):
-    text = f"Predicted ML_gap    =  {pred:.3f}"
+def print_reg(file,pred,type="gap"):
+    text = f"Predicted ML_{type}    =  {pred:.3f}"
     print2(file,text)
 
 
