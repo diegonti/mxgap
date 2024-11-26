@@ -21,7 +21,7 @@ models_list, models_list_string = load_models_list(model_list_path)
 ########################################################################
 
 def parse_user_input():
-    """Uses ArgumentParser to get the user arguments and provid einformation."""
+    """Uses ArgumentParser to get the user arguments and provide information."""
 
     # ArgumentParser parsing
     parser = ArgumentParser(usage="%(prog)s [-h] [-f CONTCAR [DOSCAR]] [-m MODEL] PATH",
@@ -104,7 +104,7 @@ def validate_user_input(path,model,files,default_path="./", default_model="GBC+R
 
 def validate_user_files():
     """Validates the CONTCAR and DOSCAR files given by the user."""
-    # To Do, although not necesary
+    # To Do, although not necessary
     pass
 
 
