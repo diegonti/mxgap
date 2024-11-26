@@ -29,14 +29,14 @@ examples_dict = {mxt:get_test_info(mxt) for mxt in examples_cases}
 
 
 examples_user_input = [
-['test/examples/La2C1Cl2', 'RFC_notDOS', None, None,('test/examples/La2C1Cl2/CONTCAR', 'test/examples/La2C1Cl2/DOSCAR', 'RFC_notDOS')],
-[None, 'SVC+RFR_edges', ["test/examples/La2C1N2H2/CONTCAR","test/examples/La2C1N2H2/DOSCAR"], None,('test/examples/La2C1N2H2/CONTCAR', 'test/examples/La2C1N2H2/DOSCAR', 'SVC+RFR_edges')],
-['test/examples/La2C1Te2/', None, ["test/examples/La2C1Te2/CONTCAR","test/examples/La2C1Te2/DOSCAR"], None, ('test/examples/La2C1Te2/CONTCAR', 'test/examples/La2C1Te2/DOSCAR', 'GBC+RFR_onlygap')],
-['test/examples/La3C2O2H2', 'best', None, None, ('test/examples/La3C2O2H2/CONTCAR', 'test/examples/La3C2O2H2/DOSCAR', 'GBC+RFR_onlygap')],
-['test/examples/La3C2S2', 'model_not_exists', None, AssertionError, ('test/examples/La3C2S2/CONTCAR', 'test/examples/La3C2S2/DOSCAR', 'MLPR_edges')],
-[None, 'RFR', ["test/examples/La2C1N2H2/CONTCAR","test/examples/La2C1N2H2/DOSCAR", "extra"], ValueError, ('test/examples/La3N2H2/CONTCAR', 'test/examples/La3N2H2/DOSCAR', 'RFR')],
-[None, 'SVC+SVR', ["test/examples/La2C1N2H2/CONTCAR"], ValueError, ('test/examples/La4C3Cl2/CONTCAR', 'test/examples/La4C3Cl2/DOSCAR', 'SVR_notDOS')],
-[None, None, None, None, ('./CONTCAR', './DOSCAR', 'GBC+RFR_onlygap')]
+['test/examples/La2C1Cl2', 'RFC_notDOS', None, None,('test/examples/La2C1Cl2/CONTCAR', 'test/examples/La2C1Cl2/DOSCAR', 'RFC_notDOS','mxgap.info')],
+[None, 'SVC+RFR_edges', ["test/examples/La2C1N2H2/CONTCAR","test/examples/La2C1N2H2/DOSCAR"], None,('test/examples/La2C1N2H2/CONTCAR', 'test/examples/La2C1N2H2/DOSCAR', 'SVC+RFR_edges','mxgap.info')],
+['test/examples/La2C1Te2/', None, ["test/examples/La2C1Te2/CONTCAR","test/examples/La2C1Te2/DOSCAR"], None, ('test/examples/La2C1Te2/CONTCAR', 'test/examples/La2C1Te2/DOSCAR', 'GBC+RFR_onlygap','mxgap.info')],
+['test/examples/La3C2O2H2', 'best', None, None, ('test/examples/La3C2O2H2/CONTCAR', 'test/examples/La3C2O2H2/DOSCAR', 'GBC+RFR_onlygap','mxgap.info')],
+['test/examples/La3C2S2', 'model_not_exists', None, AssertionError, ('test/examples/La3C2S2/CONTCAR', 'test/examples/La3C2S2/DOSCAR', 'MLPR_edges','mxgap.info')],
+[None, 'RFR', ["test/examples/La2C1N2H2/CONTCAR","test/examples/La2C1N2H2/DOSCAR", "extra"], ValueError, ('test/examples/La3N2H2/CONTCAR', 'test/examples/La3N2H2/DOSCAR', 'RFR','mxgap.info')],
+[None, 'SVC+SVR', ["test/examples/La2C1N2H2/CONTCAR"], ValueError, ('test/examples/La4C3Cl2/CONTCAR', 'test/examples/La4C3Cl2/DOSCAR', 'SVR_notDOS','mxgap.info')],
+[None, None, None, None, ('./CONTCAR', './DOSCAR', 'GBC+RFR_onlygap','mxgap.info')]
 ]
 
 ########################################################################
@@ -115,9 +115,9 @@ class TestInput:
     def test_validate_user_input(self,path,model,files,expected_exception,expected_result):
         if expected_exception is not None:
             with pytest.raises(expected_exception):
-                validate_user_input(path,model,files)
+                validate_user_input(path,model,files,output=None)
         else:
-            result = validate_user_input(path,model,files)
+            result = validate_user_input(path,model,files,output=None)
             assert result == expected_result
 
 
