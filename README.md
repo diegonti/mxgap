@@ -100,7 +100,7 @@ prediction   =  run_prediction(path, model = model)
 
 ## Tests
 
-You can run tests locally using `pytest` in the project folder:
+The program has been tested using [GitHub Actions](https://github.com/diegonti/mxgap/blob/master/.github/workflows/python_tests.yaml) for Windows, Ubuntu and MacOS with python versions >=3.9. You can run tests locally using `pytest` in the project folder:
 ```
 cd mxgap
 pytest
