@@ -2,7 +2,7 @@
 
 <br>
 <p align="center">
-<img src="./tutorials/logo.png" alt= "MXgap logo" width=600>
+<img src="https://raw.githubusercontent.com/diegonti/mxgap/master/tutorials/logo.png" alt= "MXgap logo" width=600>
 </p>
 
 [![PyPi](https://img.shields.io/pypi/v/mxgap)](https://pypi.org/project/mxgap/)
@@ -21,7 +21,7 @@
 
 ### 2. ML Prediction:
 - Uses trained ML models to predict bandgap values, reducing the computational cost associated with performing full PBE0 calculations.
-- Several ML models have been trained and are available to use. The default (and best) one is a combination of a Classifier (GBC) that discriminates metallic or semiconductor MXenes and a Regressor (RFR, trained with semiconductor MXenes) to predict the bandgap. More info about the ML models in the [models/](mxgap/models/) folder.
+- Several ML models have been trained and are available to use. The default (and best) one is a combination of a Classifier (GBC) that discriminates metallic or semiconductor MXenes and a Regressor (RFR, trained with semiconductor MXenes) to predict the bandgap. More info about the ML models in the [models/](https://github.com/diegonti/mxgap/tree/master/mxgap/models) folder.
 
 
 ### 3. Output:
@@ -83,7 +83,7 @@ positional arguments:
                         CONTCAR file and, for DOS-trained models, the PBE DOSCAR file.
 
 options:
-  -h, --help            Show this help message and exit
+  -h, --help            Show this help message and exit.
   -f FILES [FILES ...], --files FILES [FILES ...]
                         Specify in order the paths to the CONTCAR and DOSCAR (if needed) 
                         files manually. The path positional argument has preference over this.
@@ -104,7 +104,7 @@ Or using the `-f` option to specify both CONTCAR and DOSCAR files:
 mxgap -f path/to/CONTCAR path/to/DOSCAR
 ```
 
-Also, the program can be imported as a python module. See the [Jupyter Notebook](tutorials/tutorials.ipynb) for some tutorials. Here is a quick example:
+Also, the program can be imported as a python module. See the [Jupyter Notebook](https://github.com/diegonti/mxgap/blob/master/tutorials/tutorials.ipynb) for some tutorials. Here is a quick example:
 
 ```python
 from mxgap import run_prediction
