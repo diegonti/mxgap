@@ -15,9 +15,9 @@
 `mxgap` is a computational tool designed to streamline electronic structure calculations for MXenes using hybrid functionals like PBE0. By employing Machine Learning (ML) models, mxgap predicts the PBE0 bandgap based on features extracted from a PBE calculation. Here’s a detailed overview of its functionality:
 
 ### 1. Feature Extraction:
-- Automatically extracts essential features and key data from a PBE calculation output, specifically tailored for [VASP](https://www.vasp.at/) (Vienna Ab initio Simulation Package) outputs.
+- Automatically extracts essential features and key data from a PBE calculation output, specifically tailored for [VASP](https://www.vasp.at/) (Vienna *Ab initio* Simulation Package) outputs.
 - It leverages the structural information from the CONTCAR file, and optionally users can choose to include the density of states (DOS) from the DOSCAR file to enhance prediction accuracy, depending on the selected ML model.
-- The program is designed for periodic systems. So, for now, it expects a *p*($1\times1$) terminated MXene unit cell in the CONTCAR file for proper functionality.
+- The program is designed for periodic systems. So, currently the tool requires a *p*($1\times1$) terminated MXene unit cell in the CONTCAR file for proper functionality.
 
 ### 2. ML Prediction:
 - Uses trained ML models to predict bandgap values, reducing the computational cost associated with performing full PBE0 calculations.
@@ -62,6 +62,11 @@ cd mxgap
 pip install .
 ```
 
+If installed via `pip`, it should handle all the dependencies, but If you encounter issues, install the exact package versions specified in requirements.txt using:
+
+```
+pip install -r requirements.txt
+```
 
 ## Usage
 The program is mainly used through the CLI:
@@ -72,19 +77,31 @@ mxgap [-h] [-f CONTCAR [DOSCAR]] [-m MODEL] [PATH]
 With the arguments and options explained below:
 ```
 positional arguments:
-  path                  Specify the path to the directory containing the calculation output files, if empty, will select the current directory. Must contain at least the optimized CONTCAR, and the PBE DOSCAR for the PBE trained models.
+  path                  Specify the path to the directory containing the 
+                        calculation output files, if empty, will select the
+                        current directory. Must contain at least the optimized 
+                        CONTCAR file and, for DOS-trained models, the PBE DOSCAR file.
 
 options:
-  -h, --help            show this help message and exit
+  -h, --help            Show this help message and exit
   -f FILES [FILES ...], --files FILES [FILES ...]
-                        Specify in order the CONTCAR and DOSCAR (if needed) paths manually. The path positional argument has preference over this.
+                        Specify in order the paths to the CONTCAR and DOSCAR (if needed) 
+                        files manually. The path positional argument has preference over this.
   -m MODEL, --model MODEL
-                        Choose the trained MXene-Learning model to use. By default, the most accurate version is selected (GBC+RFR_onlygap).
+                        Choose the trained MXene-Learning model to use. 
+                        By default, the most accurate version is selected (GBC+RFR_onlygap).
+  -o OUTPUT, --output OUTPUT
+                        Path of the output file. By default it will generate a 
+                        mxgap.info in the CONTCAR folder.
   -l, --list            List of all trained ML models available to choose.
 ```
-So, for a quick example, the below command will look for the CONTCAR and DOSCAR files in the specified folder and use the default (best) ML model to predict the bandgap.
+So, for a quick example, the below command will look for the CONTCAR and DOSCAR files in the specified folder and use the default (best) ML model to predict the bandgap:
 ```
-mxgap examples/La2C1Cl2/
+mxgap examples/folder/
+```
+Or using the `-f` option to specify both CONTCAR and DOSCAR files:
+```
+mxgap -f path/to/CONTCAR path/to/DOSCAR
 ```
 
 Also, the program can be imported as a python module. See the [Jupyter Notebook](tutorials/tutorials.ipynb) for some tutorials. Here is a quick example:
