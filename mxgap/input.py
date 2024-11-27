@@ -10,7 +10,7 @@ import sys
 from argparse import ArgumentParser
 
 from mxgap.utils import add_path_ending, model_needsDOS, load_models_list
-from . import PACKAGE_NAME
+from . import PACKAGE_NAME, __version__
 
 
 model_list_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models', 'MODELS_LIST.txt')
@@ -29,11 +29,18 @@ def parse_user_input():
                             For use, input the path of the folder of the calculation (with optimized CONTCAR and PBE DOSCAR present). \
                             The DOSCAR will be analyzed within a ±5 eV range from the Fermi level; it is recommended to select a sufficiently fine NEDOS for accurate results.\
                             This program is based on our works: J. Mater. Chem. A, 2023,11, 13754-13764; Energy Environ. Mater, 2024, 7, e12774.")
-    parser.add_argument("path",type=str,nargs="?",default=None,help="Specify the path to the directory containing the calculation output files, if empty, will select the current directory. Must contain at least the optimized CONTCAR, and the PBE DOSCAR for the PBE trained models.")
-    parser.add_argument("-f","--files",type=str,nargs="+",required=False,help="Specify in order the direct CONTCAR and DOSCAR (if needed) paths manually. The path positional argument has preference over this.")
-    parser.add_argument("-m","--model",type=str,default=None,help="Choose the trained MXene-Learning model to use. By default, the most accurate version is selected (RFR).")
-    parser.add_argument("-o","--output",type=str,default=None,help="Path of the output file. By default it will generate a mxgap.info in the CONTCAR folder.")
-    parser.add_argument("-l","--list", action="store_true",help="List of all trained ML models available to choose.")
+    parser.add_argument("path",type=str,nargs="?",default=None,
+                        help="Specify the path to the directory containing the calculation output files, if empty, will select the current directory. Must contain at least the optimized CONTCAR file and, for DOS-trained models, the PBE DOSCAR file.")
+    parser.add_argument("-f","--files",type=str,nargs="+",required=False,
+                        help="Specify in order the direct CONTCAR and DOSCAR (if needed) paths manually. The path positional argument has preference over this.")
+    parser.add_argument("-m","--model",type=str,default=None,
+                        help="Choose the trained MXene-Learning model to use. By default, the most accurate version is selected (RFR).")
+    parser.add_argument("-o","--output",type=str,default=None,
+                        help="Path of the output file. By default it will generate a mxgap.info in the CONTCAR folder.")
+    parser.add_argument("-l","--list", action="store_true",
+                        help="List of all trained ML models available to choose.")
+    parser.add_argument('-V', '--version', action='version', version=f'%(prog)s {__version__}',
+                        help="Show program's version number and exit.")
     args = parser.parse_args()
 
     if args.list:
