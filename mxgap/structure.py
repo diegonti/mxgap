@@ -132,7 +132,7 @@ class Structure(Atoms):
     def get_n_terminations(self):
         """Returns the number of terminations (0 pristine, 1 T, 2, OH, etc). (For MXenes)"""
 
-        n_atoms = len(set(self.get_chemical_symbols())) + self.repeated_T
+        n_atoms = len(set(self.get_chemical_symbols())) + self.get_repeated_T()
 
         return n_atoms - 2
     
@@ -161,6 +161,8 @@ class Structure(Atoms):
 
         # Calculate repeated terminations (T)
         repeated_T = (nX - nM + 1) // 2
+
+        self.repeated_T = repeated_T
 
         return repeated_T
 
@@ -203,6 +205,7 @@ class Structure(Atoms):
         """Returns a M>X>T sorted version of the MXene."""
 
         # Get symbols for each atom type (M,X,T)
+        M_pos,X_pos,T_pos = self.getMXT(symbols=False)
         M,X,T = self.getMXT(symbols=True)
         M,X,T = M[0], X[0], T[0] if T is not None else None
         extra_terminations = [symbol for symbol in self.get_chemical_symbols() if symbol not in {M, X, T}]
@@ -214,8 +217,10 @@ class Structure(Atoms):
             priority[term] = 3 + i
 
         # Sort atoms by priority and z position
+        # Special case for the lowest termination in repeated XT MXenes (Like in M,N,NH) is accounted
         sorted_indices = sorted(range(len(self)), 
-                        key=lambda i: (priority[self[i].symbol], self[i].position[2]))
+                        key=lambda i: (priority[self[i].symbol], 
+                                       self[i].position[2] if not ((self.repeated_T > 0) and (self[i].symbol == T) and is_close(self[i].position[2],T_pos.T[2].min())) else T_pos.T[2].max()-0.1))
         
         return self[sorted_indices]
       
