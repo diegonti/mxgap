@@ -188,7 +188,7 @@ class TestStructure:
     @pytest.mark.parametrize("case, expected_result", [
         (k,int(v["rT"])) for k,v in examples_dict.items()
     ])
-    def test_get_n_terminations(self,case,expected_result):
+    def test_get_repeated_T(self,case,expected_result):
         structure = Structure(os.path.join(examples_folder, case, "CONTCAR"))
         assert structure.get_repeated_T() == expected_result
 
