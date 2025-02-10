@@ -87,7 +87,7 @@ def make_data_array(contcar_path,doscar_path,needDOS,norm_x_contcar,norm_x_dosca
 
     # Get data arrays #!(Should be for each model, in the case of two models)
     contcar_array = get_contcar_array(contcar_path)
-    if needDOS: doscar_array = get_doscar_array(doscar_path)
+    if needDOS and doscar_path is not None: doscar_array = get_doscar_array(doscar_path)
     else: doscar_array = None
 
     # Normalize and join arrays 
