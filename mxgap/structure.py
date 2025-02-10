@@ -340,8 +340,8 @@ if __name__ == "__main__":
     # structure.write(out_path,"vasp",direct=True)
 
     ## Adds Termination to optimized structure.
-    # structure.addT("O",hollows="HX")
-    # structure.addT("H",hollows="HX")
+    # structure.addT("O",hollow="HX")
+    # structure.addT("H",hollow="HX")
     # structure.write(out_path,"vasp",direct=True)
 
     ## Shifts the slab a certain amount
