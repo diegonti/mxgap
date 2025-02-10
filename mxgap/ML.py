@@ -15,7 +15,7 @@ import os
 from time import time
 
 from mxgap.features import make_data_array
-from mxgap.utils import load_normalization, load_models_list, load_pickle, model_needsDOS, rescale, \
+from mxgap.utils import load_normalization, load_pickle, model_needsDOS, rescale, \
                             model_type, reorder_model_list, print2, print_header, print_predictions
 from mxgap.input import validate_user_input, input_path_exists
 from mxgap import PACKAGE_NAME
@@ -100,7 +100,7 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",o
         output = os.path.join(base_path, "mxgap.info")
 
     # Load normalization and data arrays
-    norm_x_contcar, norm_x_doscar, norm_y = load_normalization(norm_path)
+    norm_x_contcar, norm_x_doscar, norm_y = load_normalization()
     data_array_dict = {True: make_data_array(contcar_path, doscar_path, True, norm_x_contcar, norm_x_doscar),
                        False: make_data_array(contcar_path, doscar_path, False, norm_x_contcar, norm_x_doscar),}
 
@@ -164,10 +164,7 @@ default_path    =   "./"
 default_model   =   "GBC+RFR_onlygap"
 default_output  =   "mxgap.info"
 models_path     =   os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models', 'models/')
-norm_path       =   os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models', 'NORM_INFO.txt')
-model_list_path =   os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models', 'MODELS_LIST.txt')
 
-models_list, models_list_string = load_models_list(model_list_path)
 
 if __name__ == "__main__":
     contcar_path    = "test/examples/La2C1Cl2/CONTCAR"

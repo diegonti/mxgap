@@ -4,6 +4,7 @@ General utility functions that the MXgap program uses.
 
 Diego Ontiveros
 """
+import os
 import pickle
 from datetime import datetime
 
@@ -110,7 +111,7 @@ def is_close(a1,a2,atol=5e-3):
 
 
 def round_zeros(arr, tol=1e-7):
-    """Sets to actual zero the values close to zero in an aray, with a given tolerance."""
+    """Sets to actual zero the values close to zero in an array, with a given tolerance."""
     arr[np.isclose(arr, 0, atol=tol)] = 0.0
     return arr
 
@@ -127,13 +128,14 @@ def get_structure_indices(stack:str,hollow:str):
 
 
 ########################################################################
-######################### ML Models Uitilities #########################
+######################### ML Models Utilities #########################
 ########################################################################
 
-def load_models_list(path:str):
-    """Loads available models list from file."""
+def load_models_list():
+    """Loads available models list from file. Returns the list and the printable string."""
+    model_list_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models', 'MODELS_LIST.txt')
     models_list = []
-    with open(path,"r") as outFile:
+    with open(model_list_path,"r") as outFile:
         models_list_string = outFile.read()
         outFile.seek(0)
         for i,line in enumerate(outFile):
@@ -145,9 +147,11 @@ def load_models_list(path:str):
     return models_list, models_list_string
 
 
-def load_normalization(path:str):
-    """Loads the min/max normalization parameters used when training the models."""
-    norm_array = np.loadtxt(path,usecols=[1,2])
+def load_normalization():
+    """Loads the min/max normalization parameters used when training the models.
+    In order, it returns the CONTCAR, DOSCAR, and output normalization parameters."""
+    norm_path  = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models', 'NORM_INFO.txt')
+    norm_array = np.loadtxt(norm_path,usecols=[1,2])
     norm_x, norm_y = norm_array[:-3],norm_array[-3:]
     norm_x_contcar, norm_x_doscar = norm_x[:-3], norm_x[-3:]
 

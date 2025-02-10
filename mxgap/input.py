@@ -13,8 +13,7 @@ from mxgap.utils import add_path_ending, model_needsDOS, load_models_list
 from . import PACKAGE_NAME, __version__
 
 
-model_list_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'models', 'MODELS_LIST.txt')
-models_list, models_list_string = load_models_list(model_list_path)
+models_list, models_list_string = load_models_list()
 
 ########################################################################
 ############################ Input Parsing #############################
