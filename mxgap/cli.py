@@ -5,8 +5,6 @@ Use MXene-trained ML models to predict bandgap.
 Diego Ontiveros
 """
 
-import os
-
 from mxgap.input import parse_user_input
 from mxgap.ML import run_prediction
    
