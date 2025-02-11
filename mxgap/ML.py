@@ -3,13 +3,6 @@ Functions related to perform the ML prediction.
 
 Diego Ontiveros
 """
-"""
-TO DO:
-- Implement regression_edges
-- Add verbosity in ML_prediction/run_prediction/cli
-- Add output filename option
-
-"""
 
 import os
 from time import time
