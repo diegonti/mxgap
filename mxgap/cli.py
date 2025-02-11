@@ -2,7 +2,7 @@
 Main program for the MXap package utilization through CLI.
 Use MXene-trained ML models to predict bandgap.
 
-Diego Ontiveros - 07/10/2024 [diego.ontiveros@ub.edu]
+Diego Ontiveros
 """
 
 import os
