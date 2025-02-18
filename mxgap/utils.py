@@ -42,6 +42,12 @@ def print_reg(file,pred,type="gap"):
     print2(file,text)
 
 
+def print_proba(file,pred):
+    text = f"Class probability   =  {pred:.3f}"
+    if abs(pred-0.5) < 0.05: text += "\n WARNING: Low confidence prediction. The predicted probability is near 0.5. This result may be unreliable. Consider additional analysis."
+    print2(file,text)
+
+
 def print_header(file,path,model,contcar_path,doscar_path,output):
     current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     report = f"""
@@ -61,10 +67,12 @@ Output Path:     {output}
     print2(file,report,mode="w")
 
 
-def print_predictions(output, isgap=None, gap=None, vbm=None, cbm=None):
+def print_predictions(output, isgap=None, prob=None, gap=None, vbm=None, cbm=None):
     """Print predictions to the output file."""
     if isgap is not None:
         print_clf(output, isgap)
+    if prob is not None:
+        print_proba(output, prob)
     if vbm is not None:
         print_reg(output, vbm, "VBM")
     if cbm is not None:

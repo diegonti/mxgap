@@ -14,13 +14,22 @@ from mxgap.input import validate_user_input, input_path_exists
 from mxgap import PACKAGE_NAME
 
 
-def model_prediction(model_str,data_array):
-    """Loads model and makes ML prediction."""
-
+def model_prediction(model_str, data_array, return_proba=False):
+    """Loads model and makes ML prediction, including probabilities for classifiers."""
     model = load_pickle(models_path + model_str)
-    model_pred = model.predict([data_array])[0]
-
-    return model_pred
+    has_proba = callable(getattr(model, "predict_proba", None))
+    
+    if return_proba and has_proba: 
+        probabilities = model.predict_proba([data_array]).T[1][0]
+        prediction = model.predict([data_array])[0]
+        return prediction, probabilities
+    elif return_proba and not has_proba:
+        print(f"WARNING: Model {model_str} does not support probabilities. Ignoring the -p flag.")
+        prediction = model.predict([data_array])[0]
+        return prediction
+    else:
+        prediction = model.predict([data_array])[0]
+        return prediction
 
 def process_edge_predictions(pred, norm_y):
     """Process edge-based regressor predictions."""
@@ -31,33 +40,40 @@ def process_edge_predictions(pred, norm_y):
     return [ML_VBM, ML_CBM, ML_gap]
 
 
-def handle_classifier_and_regressor(model_list, m_type, data_array_dict, norm_y, output):
+def handle_classifier_and_regressor(model_list, m_type, data_array_dict, norm_y, output, return_proba=False):
     """Handle cases where a classifier and a regressor are used together."""
 
     # Ensure models are ordered as classifier + regressor
     clf_str, reg_str = reorder_model_list(model_list, m_type)
 
     # Classifier prediction
-    ML_isgap = model_prediction(clf_str, data_array_dict[model_needsDOS(clf_str)])
+    clf_pred = model_prediction(clf_str, data_array_dict[model_needsDOS(clf_str)], return_proba=return_proba)
+
+    if isinstance(clf_pred, tuple):
+        ML_isgap, ML_proba = clf_pred
+        ML_proba = round(ML_proba, 3)
+    else:
+        ML_isgap = clf_pred
+        ML_proba = None
 
     if ML_isgap == 1:  # Only proceed with regressor if a gap is predicted
         reg_pred = model_prediction(reg_str, data_array_dict[model_needsDOS(reg_str)])
         if "_edges" in reg_str:
             ML_VBM, ML_CBM, ML_gap = process_edge_predictions(reg_pred, norm_y)
-            print_predictions(output, isgap=ML_isgap, vbm=ML_VBM, cbm=ML_CBM, gap=ML_gap)
-            return [ML_isgap, ML_VBM, ML_CBM, ML_gap]
+            print_predictions(output, isgap=ML_isgap, prob=ML_proba, vbm=ML_VBM, cbm=ML_CBM, gap=ML_gap)
+            return [ML_isgap, ML_VBM, ML_CBM, ML_gap] + ([ML_proba] if return_proba else [])
         else:
             ML_gap = round(rescale(reg_pred, norm_y, 0), 3)
-            print_predictions(output, isgap=ML_isgap, gap=ML_gap)
-            return [ML_isgap, ML_gap]
+            print_predictions(output, isgap=ML_isgap, prob=ML_proba, gap=ML_gap)
+            return [ML_isgap, ML_gap] + ([ML_proba] if return_proba else [])
     else:
-        print_predictions(output, isgap=ML_isgap, gap=0)
-        return [ML_isgap, 0]
+        print_predictions(output, isgap=ML_isgap, prob=ML_proba, gap=0)
+        return [ML_isgap, 0] + ([ML_proba] if return_proba else [])
 
 
-def handle_single_model(model, m_type, data_array_dict, norm_y, output):
+def handle_single_model(model, m_type, data_array_dict, norm_y, output, return_proba=False):
     """Handle cases where only a single model (classifier or regressor) is used."""
-    pred = model_prediction(model, data_array_dict[model_needsDOS(model)])
+    pred = model_prediction(model, data_array_dict[model_needsDOS(model)], return_proba=return_proba)
 
     if m_type == "R":
         if "_edges" in model:
@@ -69,13 +85,19 @@ def handle_single_model(model, m_type, data_array_dict, norm_y, output):
             print_predictions(output, gap=ML_gap)
             return [ML_gap]
     elif m_type == "C":
-        ML_isgap=pred
-        print_predictions(output, isgap=ML_isgap)
-        return [ML_isgap]
+        if isinstance(pred,tuple):
+            ML_isgap, ML_proba = pred
+            ML_proba = round(ML_proba, 3)
+            print_predictions(output, isgap=ML_isgap, prob=ML_proba)
+            return [ML_isgap, ML_proba]
+        else:
+            ML_isgap = pred
+            print_predictions(output, isgap=ML_isgap)
+            return [ML_isgap]
 
 
 
-def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",output=None):
+def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",output:str=None,return_proba:bool=False):
     """
     Main function for predicting bandgap with ML model, from CONTCAR and DOSCAR paths.
 
@@ -104,17 +126,17 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",o
     # Single or combined model handling
     if len(model_list) == 2:
         return handle_classifier_and_regressor(
-            model_list, m_type, data_array_dict, norm_y, output
+            model_list, m_type, data_array_dict, norm_y, output, return_proba=return_proba
         )
     elif len(model_list) == 1:
         return handle_single_model(
-            model_list[0], m_type[0], data_array_dict, norm_y, output
+            model_list[0], m_type[0], data_array_dict, norm_y, output, return_proba=return_proba
         )
     else:
         raise ValueError(f"Model {model} not available. Use {PACKAGE_NAME} -l to get the full list of models.")
 
 
-def run_prediction(path:str=None, model:str=None, files:list=None, output:str=None):
+def run_prediction(path:str=None, model:str=None, files:list=None, output:str=None, return_proba:bool=False):
     """Main function for predicting bandgap with ML model. Does the validation of inputs.
 
     Parameters
@@ -144,7 +166,7 @@ def run_prediction(path:str=None, model:str=None, files:list=None, output:str=No
     output = os.path.join(base_path,output).replace("\\","/") if output == default_output else output
     print_header(output,path,model,contcar_path,doscar_path,output)
 
-    pred = ML_prediction(contcar_path,doscar_path,model,output)
+    pred = ML_prediction(contcar_path,doscar_path,model,output,return_proba=return_proba)
     
     final_time = time()
     print2(output,f"\nFinished successfully in {final_time-initial_time:.2f}s")

@@ -33,9 +33,11 @@ def parse_user_input():
     parser.add_argument("-f","--files",type=str,nargs="+",required=False,
                         help="Specify in order the direct CONTCAR and DOSCAR (if needed) paths manually. The path positional argument has preference over this.")
     parser.add_argument("-m","--model",type=str,default=None,
-                        help="Choose the trained MXene-Learning model to use. By default, the most accurate version is selected (RFR).")
+                        help="Choose the trained MXene-Learning model to use. By default, the most accurate version is selected (GBC+RFR_onlygap).")
     parser.add_argument("-o","--output",type=str,default=None,
                         help="Path of the output file. By default it will generate a mxgap.info in the CONTCAR folder.")
+    parser.add_argument("-p","--proba",action="store_true",default=False,
+                        help="Show also the probability of semiconductor class (p>=0.5: Semiconductor, p<0.5: Metallic), given by sklearn model.predict_proba().")
     parser.add_argument("-l","--list", action="store_true",
                         help="List of all trained ML models available to choose.")
     parser.add_argument('-V', '--version', action='version', version=f'%(prog)s {__version__}',
@@ -46,7 +48,7 @@ def parse_user_input():
         print(models_list_string)
         sys.exit(0) 
 
-    return args.path, args.model, args.files, args.output
+    return args.path, args.model, args.files, args.output, args.proba
 
 
 ########################################################################
