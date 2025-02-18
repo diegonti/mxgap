@@ -48,7 +48,7 @@ def print_proba(file,pred):
     print2(file,text)
 
 
-def print_header(file,path,model,contcar_path,doscar_path,output):
+def print_header(output,path,model,contcar_path,doscar_path):
     current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     report = f"""
 ====================================================================
@@ -64,7 +64,7 @@ Output Path:     {output}
 
 ====================================================================
     """
-    print2(file,report,mode="w")
+    print2(output,report,mode="w")
 
 
 def print_predictions(output, isgap=None, prob=None, gap=None, vbm=None, cbm=None):

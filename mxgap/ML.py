@@ -186,7 +186,7 @@ def run_prediction(path:str=None, model:str=None, files:list=None, output:str=No
     # Open output file and write report (#! verbosity?)
     base_path = os.path.dirname(contcar_path)
     output = os.path.join(base_path,output).replace("\\","/") if output == default_output else output
-    print_header(output,path,model,contcar_path,doscar_path,output)
+    print_header(output,path,model,contcar_path,doscar_path)
 
     pred = ML_prediction(contcar_path,doscar_path,model,output,return_proba=return_proba)
     
