@@ -40,7 +40,7 @@ def process_edge_predictions(pred, norm_y):
     return [ML_VBM, ML_CBM, ML_gap]
 
 
-def handle_classifier_and_regressor(model_list, m_type, data_array_dict, norm_y, output, return_proba=False):
+def handle_classifier_and_regressor(model_list, m_type, data_array_dict, norm_y, output="mxgap.info", return_proba=False):
     """Handle cases where a classifier and a regressor are used together."""
 
     # Ensure models are ordered as classifier + regressor
@@ -71,8 +71,9 @@ def handle_classifier_and_regressor(model_list, m_type, data_array_dict, norm_y,
         return [ML_isgap, 0] + ([ML_proba] if return_proba else [])
 
 
-def handle_single_model(model, m_type, data_array_dict, norm_y, output, return_proba=False):
+def handle_single_model(model, m_type, data_array_dict, norm_y, output="mxgap.info", return_proba=False):
     """Handle cases where only a single model (classifier or regressor) is used."""
+
     pred = model_prediction(model, data_array_dict[model_needsDOS(model)], return_proba=return_proba)
 
     if m_type == "R":
@@ -106,9 +107,9 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",o
 
     `contcar_path`  : Path for the CONTCAR file.
     `doscar_path`   : Path for the DOSCAR file.
-    `model`         : ML model to use. Defaults to GBC+RFR_onlygap (best).
-    `output`        : Path to save the output. Defaults to "mxgap.info" in the same directory as CONTCAR.
-    `return_proba`  : Optional. Return also the probability of semiconductor class (p>=0.5: Semiconductor, p<0.5: Metallic), given by sklearn model.predict_proba().
+    `model`         : Optional. ML model to use. Defaults to GBC+RFR_onlygap (best).
+    `output`        : Optional. Path to save the output. Defaults to "mxgap.info" in the same directory as CONTCAR.
+    `return_proba`  : Optional. Return also the probability of semiconductor class (p>=0.5: Semiconductor, p<0.5: Metallic), given by sklearn model.predict_proba(). Defaults to True
 
     Returns
     ------------
