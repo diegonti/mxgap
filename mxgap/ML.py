@@ -7,7 +7,7 @@ Diego Ontiveros
 import os
 from time import time
 
-from mxgap.features import make_data_array
+from mxgap.features import make_data_array, join_data_array
 from mxgap.utils import load_normalization, load_pickle, model_needsDOS, rescale, \
                             model_type, reorder_model_list, print2, print_header, print_predictions
 from mxgap.input import validate_user_input, input_path_exists
@@ -194,6 +194,59 @@ def run_prediction(path:str=None, model:str=None, files:list=None, output:str=No
     print2(output,f"\nFinished successfully in {final_time-initial_time:.2f}s")
 
     return pred
+
+
+def prediction_from_data(elemental_array,dos_array=None,model="GBC+RFR_onlygap",output="mxgap.info",return_proba=False):
+    """
+    Main function for predicting bandgap with ML model, from elemental and dos arrays. Useful for custom user data.
+
+    Parameters
+    -----------
+
+    `elemental_array` : Path for the CONTCAR file.
+    `dos_array`       : Path for the DOSCAR file.
+    `model`           : Optional. ML model to use. Defaults to GBC+RFR_onlygap (best).
+    `output`          : Optional. Path to save the output. Defaults to "mxgap.info" in the same directory as CONTCAR.
+    `return_proba`    : Optional. Return also the probability of semiconductor class (p>=0.5: Semiconductor, p<0.5: Metallic), given by sklearn model.predict_proba().
+
+    Returns
+    ------------
+    `pred` : Result of the prediction in a list. The length will vary depending on the used model and settings:
+            \nSingle model
+             If a single model is used (Classifier or Regressor) it will return 1 result (0/1 for metal/semiconductor if classification or bangap in case of regression). E.g. `[IsGap]` or `[gap]`.
+             Except when using a R_edges approach, that it will return 3 results: VBM, CBM, and bandgap. E.g. `[VBM, CBM, gap]`.
+            \nCombined model
+             If a combination of Classifier and Regressor is used (C+R), it will return 2 results (0/1 for metal/semiconductor and bangap). E.g. `[IsGap, gap]`. 
+             Except when using a R_edges approach, that it will return 4 results (Includes also VBM/CBM band edges). E.g. `[IsGap, VBM, CBM, gap]`.
+            \nClassifier with probabilities
+             If return_proba is True, it will add 1 more element at the end of the list, containing the class probability. E.g. `[IsGap, prob]` or `[IsGap, gap, prob]`.
+    """
+
+    needDOS = model_needsDOS(model)
+
+    norm_x_contcar, norm_x_doscar, norm_y = load_normalization()
+
+    if needDOS and dos_array is None: raise ValueError(f"dos_array not detected. For the {model} model used, the PBE DOSCAR feature array is needed.")
+    elif not needDOS and dos_array is not None: print(f"WARNING: The {model} model you selected does not need DOSCAR file. Calculation will continue.")
+
+    data_array_dict = {True: join_data_array(elemental_array,dos_array,norm_x_contcar,norm_x_doscar),
+                        False: join_data_array(elemental_array,None,norm_x_contcar,norm_x_doscar)}
+
+    # Parse models and determine types
+    model_list = [m.strip() for m in model.split("+")]
+    m_type = [model_type(m) for m in model_list]
+
+    # Single or combined model handling
+    if len(model_list) == 2:
+        return handle_classifier_and_regressor(
+            model_list, m_type, data_array_dict, norm_y, output, return_proba=return_proba
+        )
+    elif len(model_list) == 1:
+        return handle_single_model(
+            model_list[0], m_type[0], data_array_dict, norm_y, output, return_proba=return_proba
+        )
+    else:
+        raise ValueError(f"Model {model} not available. Use {PACKAGE_NAME} -l to get the full list of models.")
 
 
 # Initialization of some paths
