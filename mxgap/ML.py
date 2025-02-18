@@ -15,7 +15,7 @@ from mxgap import PACKAGE_NAME
 
 
 def model_prediction(model_str, data_array, return_proba=False):
-    """Loads model and makes ML prediction, including probabilities for classifiers."""
+    """Loads model and makes ML prediction, including (optional) probabilities for classifiers."""
     model = load_pickle(models_path + model_str)
     has_proba = callable(getattr(model, "predict_proba", None))
     
@@ -108,6 +108,19 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",o
     `doscar_path`   : Path for the DOSCAR file.
     `model`         : ML model to use. Defaults to GBC+RFR_onlygap (best).
     `output`        : Path to save the output. Defaults to "mxgap.info" in the same directory as CONTCAR.
+    `return_proba`  : Optional. Return also the probability of semiconductor class (p>=0.5: Semiconductor, p<0.5: Metallic), given by sklearn model.predict_proba().
+
+    Returns
+    ------------
+    `pred` : Result of the prediction in a list. The length will vary depending on the used model and settings:
+            \nSingle model
+             If a single model is used (Classifier or Regressor) it will return 1 result (0/1 for metal/semiconductor if classification or bangap in case of regression). E.g. `[IsGap]` or `[gap]`.
+             Except when using a R_edges approach, that it will return 3 results: VBM, CBM, and bandgap. E.g. `[VBM, CBM, gap]`.
+            \nCombined model
+             If a combination of Classifier and Regressor is used (C+R), it will return 2 results (0/1 for metal/semiconductor and bangap). E.g. `[IsGap, gap]`. 
+             Except when using a R_edges approach, that it will return 4 results (Includes also VBM/CBM band edges). E.g. `[IsGap, VBM, CBM, gap]`.
+            \nClassifier with probabilities
+             If return_proba is True, it will add 1 more element at the end of the list, containing the class probability. E.g. `[IsGap, prob]` or `[IsGap, gap, prob]`.
     """
 
     if output is None:
@@ -146,11 +159,19 @@ def run_prediction(path:str=None, model:str=None, files:list=None, output:str=No
     `files`  : Optional. Specify the paths for the CONTCAR and DOSCAR files, in a list. By default None. 
                Use either `paths` or `files`, if both are specified, `path` will take preference.
     `output` : Optional. Specify the output file. By default it will generate a mxgap.info in the CONTCAR folder. 
+    `return_proba`  : Optional. Return also the probability of semiconductor class (p>=0.5: Semiconductor, p<0.5: Metallic), given by sklearn model.predict_proba().
 
     Returns
-    ---------
-    `pred` : Result of the prediction in a list. The length will vary depending on the used model. 
-             Can be either 1 (single Classifier or Regressor), 2 for combination of C+R, or +2 more for each when using the R_edges approach.
+    ------------
+    `pred` : Result of the prediction in a list. The length will vary depending on the used model and settings:
+            \nSingle model
+             If a single model is used (Classifier or Regressor) it will return 1 result (0/1 for metal/semiconductor if classification or bangap in case of regression). E.g. `[IsGap]` or `[gap]`.
+             Except when using a R_edges approach, that it will return 3 results: VBM, CBM, and bandgap. E.g. `[VBM, CBM, gap]`.
+            \nCombined model
+             If a combination of Classifier and Regressor is used (C+R), it will return 2 results (0/1 for metal/semiconductor and bangap). E.g. `[IsGap, gap]`. 
+             Except when using a R_edges approach, that it will return 4 results (Includes also VBM/CBM band edges). E.g. `[IsGap, VBM, CBM, gap]`.
+            \nClassifier with probabilities
+             If return_proba is True, it will add 1 more element at the end of the list, containing the class probability. E.g. `[IsGap, prob]` or `[IsGap, gap, prob]`.
 
     """
     print()
