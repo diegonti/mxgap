@@ -173,8 +173,8 @@ def run_prediction(path:str=None, model:str=None, files:list=None, output:str=No
              Except when using a R_edges approach, that it will return 4 results (Includes also VBM/CBM band edges). E.g. `[IsGap, VBM, CBM, gap]`.
             \nClassifier with probabilities
              If return_proba is True, it will add 1 more element at the end of the list, containing the class probability. E.g. `[IsGap, prob]` or `[IsGap, gap, prob]`.
-
     """
+    
     print()
     initial_time = time()
 
