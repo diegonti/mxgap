@@ -6,7 +6,7 @@ from sklearn.base import BaseEstimator
 
 from mxgap.dos import Doscar
 from mxgap.structure import Structure
-from mxgap.features import get_contcar_array, get_doscar_array
+from mxgap.features import get_elemental_array, get_doscar_array
 from mxgap.input import validate_user_input
 from mxgap.utils import load_pickle, get_structure_indices, model_needsDOS, model_type, is_close
 from mxgap.ML import ML_prediction
@@ -210,8 +210,8 @@ class TestFeatures:
     @pytest.mark.parametrize("case, expected_result", [
         (k,os.path.join(examples_folder, k, "contcar_array.npy")) for k,v in examples_dict.items()
     ])
-    def test_get_contcar_array(self,case,expected_result):
-        contcar_array = get_contcar_array(os.path.join(examples_folder, case, "CONTCAR"))
+    def test_get_elemental_array(self,case,expected_result):
+        contcar_array = get_elemental_array(os.path.join(examples_folder, case, "CONTCAR"))
         assert is_close(contcar_array,np.load(expected_result),atol=1e-3)
 
 

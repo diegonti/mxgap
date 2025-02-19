@@ -13,7 +13,7 @@ from mxgap.utils import get_structure_indices
 
 
 
-def get_contcar_array(contcar_path):
+def get_elemental_array(contcar_path):
     """Gets the raw input data array from the CONTCAR file. """
 
     # CONTCAR information (geometry)
@@ -86,7 +86,7 @@ def make_data_array(contcar_path,doscar_path,needDOS,norm_x_contcar,norm_x_dosca
     """Gets the normalized data_array from the input paths."""
 
     # Get data arrays #!(Should be for each model, in the case of two models)
-    contcar_array = get_contcar_array(contcar_path)
+    contcar_array = get_elemental_array(contcar_path)
     if needDOS and doscar_path is not None: doscar_array = get_doscar_array(doscar_path)
     else: doscar_array = None
 
@@ -101,7 +101,7 @@ def make_data_array(contcar_path,doscar_path,needDOS,norm_x_contcar,norm_x_dosca
 
 if __name__=="__main__":
 
-    contcar_array = get_contcar_array("test/CONTCAR")
+    contcar_array = get_elemental_array("test/CONTCAR")
     doscar_array = get_doscar_array("test/DOSCAR")
 
     print(doscar_array)
