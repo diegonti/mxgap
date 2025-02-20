@@ -12,7 +12,7 @@
 
 ## About
 
-`mxgap` is a computational tool designed to streamline electronic structure calculations for MXenes using hybrid functionals like PBE0. By employing Machine Learning (ML) models, mxgap predicts the PBE0 bandgap based on features extracted from a PBE calculation. Here’s a detailed overview of its functionality:
+`mxgap` is a computational tool designed to streamline electronic structure calculations for MXenes using hybrid functionals like PBE0. By employing Machine Learning (ML) models, `mxgap` predicts the PBE0 bandgap based on features extracted from a PBE calculation. Here’s a detailed overview of its functionality:
 
 ### 1. Feature Extraction:
 - Automatically extracts essential features and key data from a PBE calculation output, specifically tailored for [VASP](https://www.vasp.at/) (Vienna *Ab initio* Simulation Package) outputs.
@@ -85,15 +85,19 @@ positional arguments:
 options:
   -h, --help            Show this help message and exit.
   -f FILES [FILES ...], --files FILES [FILES ...]
-                        Specify in order the paths to the CONTCAR and DOSCAR (if needed) 
-                        files manually. The path positional argument has preference over this.
+                        Specify in order the direct CONTCAR and DOSCAR (if needed) paths manually. 
+                        The path positional argument has preference over this.
   -m MODEL, --model MODEL
                         Choose the trained MXene-Learning model to use. 
                         By default, the most accurate version is selected (GBC+RFR_onlygap).
   -o OUTPUT, --output OUTPUT
-                        Path of the output file. By default it will generate a 
-                        mxgap.info in the CONTCAR folder.
+                        Path of the output file. By default it will generate a mxgap.info in the CONTCAR folder.
+  -p, --proba           Show also the probability of semiconductor class (p>=0.5: Semiconductor, p<0.5: Metallic), 
+                        given by sklearn model.predict_proba().
+  -v {0,1,2,3}, --verbose {0,1,2,3}
+                        Verbosity level: 0 (None), 1 (File), 2 (Screen), 3 (Both). Defaults to 3.
   -l, --list            List of all trained ML models available to choose.
+  -V, --version         Show program's version number and exit.
 ```
 So, for a quick example, the below command will look for the CONTCAR and DOSCAR files in the specified folder and use the default (best) ML model to predict the bandgap:
 ```
