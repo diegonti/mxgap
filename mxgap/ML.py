@@ -40,7 +40,7 @@ def process_edge_predictions(pred, norm_y):
     return [ML_VBM, ML_CBM, ML_gap]
 
 
-def handle_classifier_and_regressor(model_list, m_type, data_array_dict, norm_y, output="mxgap.info", return_proba=False):
+def handle_classifier_and_regressor(model_list, m_type, data_array_dict, norm_y, output="mxgap.info", return_proba=False, verbose:int=0):
     """Handle cases where a classifier and a regressor are used together."""
 
     # Ensure models are ordered as classifier + regressor
@@ -60,18 +60,18 @@ def handle_classifier_and_regressor(model_list, m_type, data_array_dict, norm_y,
         reg_pred = model_prediction(reg_str, data_array_dict[model_needsDOS(reg_str)])
         if "_edges" in reg_str:
             ML_VBM, ML_CBM, ML_gap = process_edge_predictions(reg_pred, norm_y)
-            print_predictions(output, isgap=ML_isgap, prob=ML_proba, vbm=ML_VBM, cbm=ML_CBM, gap=ML_gap)
+            print_predictions(output, isgap=ML_isgap, prob=ML_proba, vbm=ML_VBM, cbm=ML_CBM, gap=ML_gap, verbose=verbose)
             return [ML_isgap, ML_VBM, ML_CBM, ML_gap] + ([ML_proba] if return_proba else [])
         else:
             ML_gap = round(rescale(reg_pred, norm_y, 0), 3)
-            print_predictions(output, isgap=ML_isgap, prob=ML_proba, gap=ML_gap)
+            print_predictions(output, isgap=ML_isgap, prob=ML_proba, gap=ML_gap, verbose=verbose)
             return [ML_isgap, ML_gap] + ([ML_proba] if return_proba else [])
     else:
-        print_predictions(output, isgap=ML_isgap, prob=ML_proba, gap=0)
+        print_predictions(output, isgap=ML_isgap, prob=ML_proba, gap=0, verbose=verbose)
         return [ML_isgap, 0] + ([ML_proba] if return_proba else [])
 
 
-def handle_single_model(model, m_type, data_array_dict, norm_y, output="mxgap.info", return_proba=False):
+def handle_single_model(model, m_type, data_array_dict, norm_y, output="mxgap.info", return_proba=False, verbose:int=0):
     """Handle cases where only a single model (classifier or regressor) is used."""
 
     pred = model_prediction(model, data_array_dict[model_needsDOS(model)], return_proba=return_proba)
@@ -79,26 +79,26 @@ def handle_single_model(model, m_type, data_array_dict, norm_y, output="mxgap.in
     if m_type == "R":
         if "_edges" in model:
             ML_VBM, ML_CBM, ML_gap = process_edge_predictions(pred, norm_y)
-            print_predictions(output, vbm=ML_VBM, cbm=ML_CBM, gap=ML_gap)
+            print_predictions(output, vbm=ML_VBM, cbm=ML_CBM, gap=ML_gap, verbose=verbose)
             return [ML_VBM, ML_CBM, ML_gap]
         else:
             ML_gap = round(rescale(pred, norm_y, 0), 3)
-            print_predictions(output, gap=ML_gap)
+            print_predictions(output, gap=ML_gap, verbose=verbose)
             return [ML_gap]
     elif m_type == "C":
         if isinstance(pred,tuple):
             ML_isgap, ML_proba = pred
             ML_proba = round(ML_proba, 3)
-            print_predictions(output, isgap=ML_isgap, prob=ML_proba)
+            print_predictions(output, isgap=ML_isgap, prob=ML_proba, verbose=verbose)
             return [ML_isgap, ML_proba]
         else:
             ML_isgap = pred
-            print_predictions(output, isgap=ML_isgap)
+            print_predictions(output, isgap=ML_isgap, verbose=verbose)
             return [ML_isgap]
 
 
 
-def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",output:str=None,return_proba:bool=False):
+def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",output:str=None,return_proba:bool=False,verbose:int=0):
     """
     Main function for predicting bandgap with ML model, from CONTCAR and DOSCAR paths.
 
@@ -140,17 +140,17 @@ def ML_prediction(contcar_path:str,doscar_path:str,model:str="GBC+RFR_onlygap",o
     # Single or combined model handling
     if len(model_list) == 2:
         return handle_classifier_and_regressor(
-            model_list, m_type, data_array_dict, norm_y, output, return_proba=return_proba
+            model_list, m_type, data_array_dict, norm_y, output, return_proba=return_proba, verbose=verbose
         )
     elif len(model_list) == 1:
         return handle_single_model(
-            model_list[0], m_type[0], data_array_dict, norm_y, output, return_proba=return_proba
+            model_list[0], m_type[0], data_array_dict, norm_y, output, return_proba=return_proba, verbose=verbose
         )
     else:
         raise ValueError(f"Model {model} not available. Use {PACKAGE_NAME} -l to get the full list of models.")
 
 
-def run_prediction(path:str=None, model:str=None, files:list=None, output:str=None, return_proba:bool=False):
+def run_prediction(path:str=None, model:str=None, files:list=None, output:str=None, return_proba:bool=False, verbose:int=0):
     """Main function for predicting bandgap with ML model. Does the validation of inputs.
 
     Parameters
@@ -161,6 +161,7 @@ def run_prediction(path:str=None, model:str=None, files:list=None, output:str=No
                Use either `paths` or `files`, if both are specified, `path` will take preference.
     `output` : Optional. Specify the output file. By default it will generate a mxgap.info in the CONTCAR folder. 
     `return_proba`  : Optional. Return also the probability of semiconductor class (p>=0.5: Semiconductor, p<0.5: Metallic), given by sklearn model.predict_proba().
+    `verbose`       : Optional. Verbosity level: 0 (None), 1 (File), 2 (Screen), 3 (Both). Defaults to 0.
 
     Returns
     ------------
@@ -186,17 +187,17 @@ def run_prediction(path:str=None, model:str=None, files:list=None, output:str=No
     # Open output file and write report (#! verbosity?)
     base_path = os.path.dirname(contcar_path)
     output = os.path.join(base_path,output).replace("\\","/") if output == default_output else output
-    print_header(output,path,model,contcar_path,doscar_path)
+    print_header(output,path,model,contcar_path,doscar_path,verbose=verbose)
 
-    pred = ML_prediction(contcar_path,doscar_path,model,output,return_proba=return_proba)
+    pred = ML_prediction(contcar_path,doscar_path,model,output,return_proba=return_proba,verbose=verbose)
     
     final_time = time()
-    print2(output,f"\nFinished successfully in {final_time-initial_time:.2f}s")
+    print2(f"\nFinished successfully in {final_time-initial_time:.2f}s", output, verbose=verbose)
 
     return pred
 
 
-def prediction_from_data(elemental_array,dos_array=None,model="GBC+RFR_onlygap",output="mxgap.info",return_proba=False):
+def prediction_from_data(elemental_array,dos_array=None,model="GBC+RFR_onlygap",output="mxgap.info",return_proba=False,verbose:int=0):
     """
     Main function for predicting bandgap with ML model, from elemental and dos arrays. Useful for custom user data.
 
@@ -239,11 +240,11 @@ def prediction_from_data(elemental_array,dos_array=None,model="GBC+RFR_onlygap",
     # Single or combined model handling
     if len(model_list) == 2:
         return handle_classifier_and_regressor(
-            model_list, m_type, data_array_dict, norm_y, output, return_proba=return_proba
+            model_list, m_type, data_array_dict, norm_y, output, return_proba=return_proba, verbose=verbose
         )
     elif len(model_list) == 1:
         return handle_single_model(
-            model_list[0], m_type[0], data_array_dict, norm_y, output, return_proba=return_proba
+            model_list[0], m_type[0], data_array_dict, norm_y, output, return_proba=return_proba, verbose=verbose
         )
     else:
         raise ValueError(f"Model {model} not available. Use {PACKAGE_NAME} -l to get the full list of models.")

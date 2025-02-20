@@ -20,7 +20,8 @@ models_list, models_list_string = load_models_list()
 ########################################################################
 
 def parse_user_input():
-    """Uses ArgumentParser to get the user arguments and provide information."""
+    """Uses ArgumentParser to get the user arguments and provide information.
+    Returns the path, model, files, output, proba, and verbose arguments."""
 
     # ArgumentParser parsing
     parser = ArgumentParser(usage="%(prog)s [-h] [-f CONTCAR [DOSCAR]] [-m MODEL] PATH",
@@ -38,6 +39,8 @@ def parse_user_input():
                         help="Path of the output file. By default it will generate a mxgap.info in the CONTCAR folder.")
     parser.add_argument("-p","--proba",action="store_true",default=False,
                         help="Show also the probability of semiconductor class (p>=0.5: Semiconductor, p<0.5: Metallic), given by sklearn model.predict_proba().")
+    parser.add_argument("-v","--verbose", type=int, choices=[0, 1, 2, 3], default=3,
+                        help="Verbosity level: 0 (None), 1 (File), 2 (Screen), 3 (Both). Defaults to 3.")
     parser.add_argument("-l","--list", action="store_true",
                         help="List of all trained ML models available to choose.")
     parser.add_argument('-V', '--version', action='version', version=f'%(prog)s {__version__}',
@@ -48,7 +51,7 @@ def parse_user_input():
         print(models_list_string)
         sys.exit(0) 
 
-    return args.path, args.model, args.files, args.output, args.proba
+    return args.path, args.model, args.files, args.output, args.proba, args.verbose
 
 
 ########################################################################

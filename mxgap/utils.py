@@ -25,30 +25,46 @@ levels          = ["DOS","notDOS"]
 ######################### Printing Functions ###########################
 ########################################################################
 
-def print2(file,text,mode="a"):
+def print2(text,file,mode="a"):
     """Print text both into screen and file."""
     print(text)
     with open(file,mode) as outFile:
         outFile.write(text +  "\n")
 
+def print2(text, file, verbose=3, mode="a"):
+    """Print text based on verbosity level.
+    
+    Verbosity levels:
+    0 - No output
+    1 - Only file
+    2 - Only screen
+    3 - Both screen and file
+    """
+    if verbose in [2, 3]:  
+        print(text)
+    if verbose in [1, 3]:  
+        with open(file, mode) as outFile:
+            outFile.write(text + "\n")
 
-def print_clf(file,pred):
+
+
+def print_clf(pred,file,verbose=3):
     text = f"Predicted ML_isgap  =  {pred} ({'Semiconductor' if pred else 'Metallic'})"
-    print2(file,text)
+    print2(text,file,verbose=verbose)
 
 
-def print_reg(file,pred,type="gap"):
+def print_reg(pred,file,type="gap",verbose=3):
     text = f"Predicted ML_{type}    =  {pred:.3f}"
-    print2(file,text)
+    print2(text,file,verbose=verbose)
 
 
-def print_proba(file,pred):
+def print_proba(pred,file,verbose=3):
     text = f"Class probability   =  {pred:.3f}"
     if abs(pred-0.5) < 0.05: text += "\n WARNING: Low confidence prediction. The predicted probability is near 0.5. This result may be unreliable. Consider additional analysis."
-    print2(file,text)
+    print2(text,file,verbose=verbose)
 
 
-def print_header(output,path,model,contcar_path,doscar_path):
+def print_header(output,path,model,contcar_path,doscar_path,verbose=3):
     current_datetime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     report = f"""
 ====================================================================
@@ -64,21 +80,21 @@ Output Path:     {output}
 
 ====================================================================
     """
-    print2(output,report,mode="w")
+    print2(report,output,mode="w",verbose=verbose)
 
 
-def print_predictions(output, isgap=None, prob=None, gap=None, vbm=None, cbm=None):
+def print_predictions(output, isgap=None, prob=None, gap=None, vbm=None, cbm=None, verbose=3):
     """Print predictions to the output file."""
     if isgap is not None:
-        print_clf(output, isgap)
+        print_clf(isgap, output, verbose=verbose)
     if prob is not None:
-        print_proba(output, prob)
+        print_proba(prob, output, verbose=verbose)
     if vbm is not None:
-        print_reg(output, vbm, "VBM")
+        print_reg(vbm, output, "VBM", verbose=verbose)
     if cbm is not None:
-        print_reg(output, cbm, "CBM")
+        print_reg(cbm, output, "CBM", verbose=verbose)
     if gap is not None:
-        print_reg(output, gap, "gap")
+        print_reg(gap, output, "gap", verbose=verbose)
 
 
 ########################################################################

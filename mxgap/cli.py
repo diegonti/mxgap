@@ -12,9 +12,9 @@ from mxgap.ML import run_prediction
 def cli():
     """Command Line Interface. Get user inputs from terminal (ArgParse) and feed them to the main ML prediction."""
     
-    path, model, files, output, proba = parse_user_input()
+    path, model, files, output, proba, verbose = parse_user_input()
 
-    run_prediction(path, model, files, output, proba)
+    run_prediction(path, model, files, output, proba, verbose)
 
 
 ##########################################################################
