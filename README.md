@@ -30,12 +30,10 @@
 
 <br>
 
-This program is based on the data gathered in our works: [*J. Mater. Chem. A*, 2023, 11, 13754-13764](https://doi.org/10.1039/D3TA01933K) and [*Energy Environ. Mater.*, 2024, 7, e12774](https://doi.org/10.1002/eem2.12774). 
-
-<!-- And the ML program and results have been published in [paper4](paper4). If use this, please cite:
+This program is based on the data gathered in our works: [*J. Mater. Chem. A*, 2023, 11, 13754-13764](https://doi.org/10.1039/D3TA01933K) and [*Energy Environ. Mater.*, 2024, 7, e12774](https://doi.org/10.1002/eem2.12774). And the MXgap program and results have been published in [*ACS Catal.* 2025, **15**, 14403-14413](https://doi.org/10.1021/acscatal.5c04191). If you use this program, please cite:
 ```
-D. Ontiveros, S. Vela, F. Viñes, C. Sousa, _Journal_, Year, Volume, Pages. DOI: doi
-```  -->
+D. Ontiveros, S. Vela, F. Viñes, C. Sousa, ACS Catal., 2025, 15, 14403-14413. DOI: 10.1021/acscatal.5c04191
+``` 
 
 
 ## Installation
