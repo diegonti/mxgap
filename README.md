@@ -38,7 +38,7 @@ D. Ontiveros, S. Vela, F. Viñes, C. Sousa, ACS Catal., 2025, 15, 14403-14413. D
 
 ## Installation
 
-`mxgap` works for python >= 3.9, and can be installed using the Python package manager `pip`:
+`mxgap` works for python 3.9 to 3.12, and can be installed using the Python package manager `pip`:
 
 ```
 pip install mxgap
@@ -47,7 +47,7 @@ pip install mxgap
 If you use conda/anaconda, the safest thing to do is to create a new environment and then install `mxgap`:
 
 ```
-conda create -n mxgap python
+conda create -n mxgap python=3.12
 conda activate mxgap
 pip install mxgap
 ```
